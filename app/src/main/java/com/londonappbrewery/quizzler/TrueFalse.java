@@ -8,11 +8,11 @@ package com.londonappbrewery.quizzler;
 public class TrueFalse {
 
     private int mQuestionID;
-    private boolean mAwnser;
+    private boolean mAnswer;
 
     public TrueFalse(int questionResourceID, boolean trueOrFalse) {
         mQuestionID = questionResourceID;
-        mAwnser = trueOrFalse;
+        mAnswer = trueOrFalse;
     }
 
     public int getQuestionID() {
@@ -23,11 +23,11 @@ public class TrueFalse {
         mQuestionID = questionID;
     }
 
-    public boolean isAwnser() {
-        return mAwnser;
+    public boolean isAwnser(boolean answer) {
+        return mAnswer == answer;
     }
 
-    public void setAwnser(boolean awnser) {
-        mAwnser = awnser;
+    public void setAnswer(boolean answer) {
+        mAnswer = answer;
     }
 }

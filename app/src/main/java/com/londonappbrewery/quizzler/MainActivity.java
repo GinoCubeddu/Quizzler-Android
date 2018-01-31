@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -14,6 +15,9 @@ public class MainActivity extends Activity {
     // TODO: Declare member variables here:
     private Button mTrueButton;
     private Button mFalseButton;
+    private TextView mQuestionTextView;
+    private int mCurrentQuestion;
+    private int mCurrentQuestionTextID;
 
     // TODO: Uncomment to create question bank
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
@@ -37,7 +41,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Retrive the buttons from the layout
+        // Retrieve the TextView for the question
+        mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+
+        mCurrentQuestion = 0;
+        mCurrentQuestionTextID = mQuestionBank[mCurrentQuestion].getQuestionID();
+
+        // Retrieve the buttons from the layout
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
 
@@ -45,19 +55,42 @@ public class MainActivity extends Activity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(
-                        getApplicationContext(), "True btn pressed", Toast.LENGTH_SHORT
-                ).show();
+                checkAnswer(true);
+                nextQuestion();
             }
         });
 
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(
-                    getApplicationContext(), "False btn Pressed", Toast.LENGTH_SHORT
-                ).show();
+                checkAnswer(false);
+                nextQuestion();
             }
         });
+    }
+
+    private void checkAnswer(boolean answer) {
+        // Display toast based on if answer was correct.
+        if (mQuestionBank[mCurrentQuestion].isAwnser(answer))
+            Toast.makeText(
+                    getApplicationContext(), getText(R.string.correct_toast), Toast.LENGTH_SHORT
+            ).show();
+        else
+            Toast.makeText(
+                    getApplicationContext(), getText(R.string.incorrect_toast), Toast.LENGTH_SHORT
+            ).show();
+
+    }
+
+    private void nextQuestion() {
+        // Display the next question if there is another one
+        if (mCurrentQuestion + 1 >= mQuestionBank.length) {
+            Toast.makeText(
+                    getApplicationContext(), "That was the last question!", Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
+        mCurrentQuestion++;
+        mQuestionTextView.setText(getText(mCurrentQuestionTextID));
     }
 }
