@@ -1,6 +1,8 @@
 package com.londonappbrewery.quizzler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -96,14 +98,24 @@ public class MainActivity extends Activity {
     private void nextQuestion() {
         // Display the next question if there is another one
         mProgressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
-        if (mCurrentQuestion + 1 >= mQuestionBank.length) {
-            Toast.makeText(
-                    getApplicationContext(), "That was the last question!", Toast.LENGTH_LONG
-            ).show();
-            return;
-        }
         mCurrentQuestion++;
-        mCurrentQuestionTextID = mQuestionBank[mCurrentQuestion].getQuestionID();
-        mQuestionTextView.setText(getText(mCurrentQuestionTextID));
+        if (mCurrentQuestion >= mQuestionBank.length) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Game Over");
+            alert.setCancelable(false);
+            alert.setMessage("You scored " + mScore + " points!");
+            alert.setPositiveButton("Close Application", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            alert.show();
+        } else
+        {
+            mCurrentQuestionTextID = mQuestionBank[mCurrentQuestion].getQuestionID();
+            mQuestionTextView.setText(getText(mCurrentQuestionTextID));
+        }
+
     }
 }
