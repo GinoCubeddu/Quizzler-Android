@@ -53,9 +53,17 @@ public class MainActivity extends Activity {
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mScoreTextView = (TextView) findViewById(R.id.score);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-        mCurrentQuestion = 0;
         mCurrentQuestionTextID = mQuestionBank[mCurrentQuestion].getQuestionID();
+
+        // Load vars based on if there is a saved instance
+        if (savedInstanceState != null) {
+            mScore = savedInstanceState.getInt("ScoreKey");
+            mCurrentQuestion = savedInstanceState.getInt("IndexKey");
+            showScore();
+        } else {
+            mScore = 0;
+            mCurrentQuestion = 0;
+        }
 
         // Retrieve the buttons from the layout
         mTrueButton = (Button) findViewById(R.id.true_button);
@@ -86,13 +94,17 @@ public class MainActivity extends Activity {
                     getApplicationContext(), getText(R.string.correct_toast), Toast.LENGTH_SHORT
             ).show();
             mScore++;
-            mScoreTextView.setText("Score " + mScore + "/" + mQuestionBank.length);
+            showScore();
         }
         else
             Toast.makeText(
                     getApplicationContext(), getText(R.string.incorrect_toast), Toast.LENGTH_SHORT
             ).show();
 
+    }
+
+    private void showScore() {
+        mScoreTextView.setText("Score " + mScore + "/" + mQuestionBank.length);
     }
 
     private void nextQuestion() {
@@ -116,6 +128,14 @@ public class MainActivity extends Activity {
             mCurrentQuestionTextID = mQuestionBank[mCurrentQuestion].getQuestionID();
             mQuestionTextView.setText(getText(mCurrentQuestionTextID));
         }
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        // We want to save both the score and index when we save the instance
+        outState.putInt("ScoreKey", mScore);
+        outState.putInt("IndexKey", mCurrentQuestion);
     }
 }
